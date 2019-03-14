@@ -10,6 +10,10 @@
 
 (defgeneric remove-last-instr(func &optional depth))
 
+(defgeneric first-child(func node))
+
+(defgeneric next-sibling(func node))
+
 (defmethod initialize-instance :after ((func func-tree) &key)
   (with-accessors ((func-name func-name) (data data)) func
     (setf data (append data (list func-name '(&optional _1 _2 _3 _4))))))
@@ -32,3 +36,9 @@
 (defmethod remove-last-instr((func func-tree) &optional (depth 0))
   (with-accessors ((data data)) func
     (remove-last-elem data depth)))
+
+(defmethod first-child((func func-tree) node)
+  (cdr (car node)))
+
+(defmethod next-sibling((func func-tree) node)
+  (cdr node))
