@@ -1,44 +1,30 @@
 (in-package :fluturel.program-synth)
 
-(defclass func-tree()
-  ((func-name
-    :initarg :func-name :initform (error "Must have a name") :accessor func-name)
-   (data
-    :initarg :data :initform (cons 'defun nil) :accessor data)
-   (num-args
-    :initarg :num-args :initform 0 :accessor num-args)))
+(defparameter *valid-forms*
+  (make-array 10 :adjustable t :fill-pointer 0))
 
-(defgeneric remove-last-instr(func &optional depth))
+(defun populate-forms()
+  (push *valid-forms* '(+))
+  (push *valid-forms* '(-))
+  (push *valid-forms* '(*))
+  (push *valid-forms* '(/))
+  (push *valid-forms* '(mod)))
 
-(defgeneric first-child(func node))
+(defun generate-random-tree(name))
 
-(defgeneric next-sibling(func node))
+(defun change-name(func-tree new-name)
+  (setf (cadr func-tree) new-name))
 
-(defmethod initialize-instance :after ((func func-tree) &key)
-  (with-accessors ((func-name func-name) (data data)) func
-    (setf data (append data (list func-name '(&optional _1 _2 _3 _4))))))
+(defun add-instr(tree instr)
+  (setf tree (append tree (list instr))))
 
-(defmethod change-name((func func-tree) new-name)
-  (with-accessors ((func-name func-name)) func
-    (setf func-name new-name)))
+(defun remove-last-instr(tree)
+  (if (null (cddr tree))
+      (setf (cdr tree) nil)
+      (remove-last-instr (cdr tree))))
 
-(defmethod add-instr((func func-tree) new-instr)
-  (with-accessors ((data data)) func
-    (setf data (append data (list new-instr)))))
-
-(defun remove-last-elem(list &optional (depth 1))
-  (if (null (cddr list))
-      (progn
-	(setf (cdr list) nil)
-	depth)
-      (remove-last-elem (cdr list) (+ depth 1))))
-
-(defmethod remove-last-instr((func func-tree) &optional (depth 0))
-  (with-accessors ((data data)) func
-    (remove-last-elem data depth)))
-
-(defmethod first-child((func func-tree) node)
-  (cdr (car node)))
-
-(defmethod next-sibling((func func-tree) node)
-  (cdr node))
+(defun flatten(tree)
+  (cond
+    ((null tree) nil)
+    ((atom tree) (list tree))
+    (t (loop :for a :in tree :appending (flatten a)))))
