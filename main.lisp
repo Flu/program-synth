@@ -3,7 +3,7 @@
 (defmacro eval-defun(args &body body)
   `(progn
      (eval ,@body)
-     (funcall (cadr ,@body) ,@args)))
+     (apply (cadr ,@body) ,args)))
 
 (defun range(start end &optional (inc 1))
   (cond
