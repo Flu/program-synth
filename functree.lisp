@@ -1,7 +1,7 @@
 (in-package :fluturel.program-synth)
 
-(defparameter *valid-forms*
-  '(+ - * pd sin cos expt))
+(defparameter *function-table*
+  '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1) (expt . 2)))
 
 (defmacro pd(number denominator)
   `(float (cond
