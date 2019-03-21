@@ -8,8 +8,9 @@
 (defun range(start end &optional (inc 1))
   (cond
     ((< end start) nil)
-    (t (let ((return-list nil))
-	 (do ((elem start (+ elem inc)))
-	     ((<= end elem))
-	   (setf return-list (append return-list (list elem))))
-	 return-list))))
+    (t
+     (let ((return-list nil))
+       (do ((elem start (+ elem inc)))
+	   ((<= end elem))
+	 (setf return-list (append return-list (list elem))))
+       return-list))))
