@@ -26,12 +26,19 @@
 
 (defun random-terminal()
   (let ((term (random 2)))
-    (if (eql term 0)
-	(get-random-value *args*)
+    (if term
+	;;(get-random-value *args*)
 	(get-random-value *numeric-constants*))))
 
-(defun generate-random-tree(depth))
-;; Generate random code tree with the given functions
+(defun generate-random-tree(depth)
+  (cond
+    ((eql depth 0) (random-terminal))
+    (t (let* ((func (random-function))
+	      (num-args (get-value-alist func *function-table*)))
+	 (if (eql (random 2) 0)
+	     (random-terminal)
+	     `(,func ,@(loop :for i :from 1 :to num-args :collect
+			  (generate-random-tree (- depth 1)))))))))
 
 (defun change-name(func-tree new-name)
   (setf (cadr func-tree) new-name))
@@ -55,7 +62,7 @@
     ((atom tree) (list tree))
     (t (loop :for a :in tree :appending (flatten a)))))
 
-(defun random-subtree(tree))
+(defun select-random-subtree(tree))
   ;; TODO: Select a random subtree and copy it
 
 
