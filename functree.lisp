@@ -3,13 +3,14 @@
 (defparameter *function-table*
   '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1) (expt . 2)))
 
-(defmacro pd(number denominator)
-  `(float (cond
-    ((eql ,denominator 0) 0)
-    (t (/ ,number ,denominator)))))
-  
+(defun pd(number denominator)
+  (float
+   (cond
+     ((= denominator 0) 0)
+     (t (/ number denominator)))))
+
 (defparameter *numeric-constants*
-  (range -10 10 0.1))
+  (range -10 10 0.5))
 
 (defparameter *args*
   '(_1 _2 _3 _4))
