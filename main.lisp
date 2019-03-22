@@ -1,9 +1,11 @@
 (in-package :fluturel.program-synth)
 
-(defmacro eval-defun(args &body body)
-  `(progn
-     (eval ,@body)
-     (apply (cadr ,@body) ,args)))
+(defun compile-func(func-tree)
+  (eval `(defun func(_1 _2 _3 _4) ,func-tree)))
+
+(defun exec-func(func-tree &rest args)
+  (compile-func func-tree)
+  (apply #'func args))
 
 (defun range(start end &optional (inc 1))
   (cond
