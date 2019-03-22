@@ -26,8 +26,8 @@
 
 (defun random-terminal()
   (let ((term (random 2)))
-    (if term
-	;;(get-random-value *args*)
+    (if (eql term 1)
+	(get-random-value *args*)
 	(get-random-value *numeric-constants*))))
 
 (defun generate-random-tree(depth)
@@ -35,7 +35,7 @@
     ((eql depth 0) (random-terminal))
     (t (let* ((func (random-function))
 	      (num-args (get-value-alist func *function-table*)))
-	 (if (eql (random 2) 0)
+	 (if (eql (random 3) 0)
 	     (random-terminal)
 	     `(,func ,@(loop :for i :from 1 :to num-args :collect
 			  (generate-random-tree (- depth 1)))))))))
