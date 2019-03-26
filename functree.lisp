@@ -54,6 +54,7 @@
 (defun tree-size(tree)
   (cond
     ((null tree) nil)
+    ((atom tree) 1)
     (t (length (flatten tree)))))
 
 (defun flatten(tree)
