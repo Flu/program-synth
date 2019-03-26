@@ -66,7 +66,20 @@
     ((atom tree) (list tree))
     (t (loop :for a :in tree :appending (flatten a)))))
 
-(defun select-random-subtree(tree))
-  ;; TODO: Select a random subtree and copy it
+(defun repeat(data times &optional (acc nil))
+  (if (zerop times)
+      acc
+      (repeat data (- times 1)
+	      (append acc (list data)))))
 
+(defun random-subtree(tree)
+  (if (zerop (random (tree-size tree)))
+      tree
+      (get-random-value (map 'list
+			     #'(lambda (l)
+				 (repeat l (tree-size l)))
+			     (if (atom tree)
+				 (list tree)
+				 tree)))))
+  ;; TODO: Select a random subtree and copy it
 
