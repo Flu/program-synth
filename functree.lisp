@@ -1,17 +1,8 @@
 (in-package :fluturel.program-synth)
 
 (defparameter *function-table*
-  '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1) (expt . 2)))
+  '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1) (exponent . 2)))
 
-(defun pd(number denominator)
-  (float
-   (cond
-     ((= denominator 0) 0)
-     (t (/ number denominator)))))
-
-(defun exponent(base power)
-  (expt (abs base) power))
-  
 (defparameter *numeric-constants*
   (range -10 10 0.5))
 
@@ -24,6 +15,15 @@
 (defmacro get-value-alist(key alist)
   `(cdr (assoc ,key ,alist)))
 
+(defun pd(number denominator)
+  (float
+   (cond
+     ((= denominator 0) 0)
+     (t (/ number denominator)))))
+
+(defun exponent(base power)
+  (expt (abs base) power))
+  
 (defun random-function()
   (car (get-random-value *function-table*)))
 
