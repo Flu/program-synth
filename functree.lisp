@@ -9,6 +9,9 @@
      ((= denominator 0) 0)
      (t (/ number denominator)))))
 
+(defun exponent(base power)
+  (expt (abs base) power))
+  
 (defparameter *numeric-constants*
   (range -10 10 0.5))
 
