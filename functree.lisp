@@ -66,10 +66,10 @@
     ((atom tree) (list tree))
     (t (loop :for a :in tree :appending (flatten a)))))
 
-(defun repeat(data times &optional (acc nil))
+(defun repeat(times data &optional (acc nil))
   (if (zerop times)
       acc
-      (repeat data (- times 1)
+      (repeat (- times 1) data
 	      (append acc (list data)))))
 
 (defun random-subtree(tree)
