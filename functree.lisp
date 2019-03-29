@@ -75,11 +75,10 @@
 (defun random-subtree(tree)
   (if (zerop (random (tree-size tree)))
       tree
-      (get-random-value (map 'list
-			     #'(lambda (l)
-				 (repeat l (tree-size l)))
-			     (if (atom tree)
-				 (list tree)
-				 tree)))))
+      (random-subtree
+       (get-random-value
+	(apply 'append (map 'list #'(lambda (x)
+			       (repeat (tree-size x) x))
+			   (rest tree)))))))
   ;; TODO: Select a random subtree and copy it
 
