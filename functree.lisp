@@ -78,7 +78,6 @@
       (random-subtree
        (get-random-value
 	(apply 'append (map 'list #'(lambda (x)
-			       (repeat (tree-size x) x))
-			   (rest tree)))))))
-  ;; TODO: Select a random subtree and copy it
+				      (repeat (tree-size x) x))
+			    (rest tree)))))))
 
