@@ -1,7 +1,5 @@
 ;;; Functions and macros for generating and working with function trees. Basically helper functions for me to use in genetic algorithm
 
-;; TODO: Function for replacing subtree in current function tree
-
 (in-package :fluturel.program-synth)
 
 ; Hashtable for functions and the number of arguments it takes
