@@ -103,3 +103,9 @@
 				      (repeat (tree-size x) x))
 			    (rest tree)))))))
 
+(defun replace-random-subtree(tree replacement)
+  "Replaces a random subtree from TREE with REPLACEMENT"
+  (let ((tree-to-replace (random-subtree tree)))
+    (values
+     (setf tree (subst replacement tree-to-replace tree))
+     tree-to-replace)))
