@@ -4,7 +4,7 @@
 
 ; Hashtable for functions and the number of arguments it takes
 (defparameter *function-table*
-  '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1) (exponent . 2)))
+  '((+ . 2) (- . 2) (* . 2) (pd . 2) (sin . 1) (cos . 1)))
 
 ; TODO: Numeric constants slow down the algorithm too much
 ; Numeric constants to use for computation
