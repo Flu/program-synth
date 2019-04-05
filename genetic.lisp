@@ -26,3 +26,16 @@
 					  1 0))
 				    *constraints*))
 		(length *constraints*)))))
+
+(defun evolve(generations population-size)
+  (init-population population-size)
+  (format t ">> Started evolving. Constraints:~%")
+  (format t "~{~a~%~}" *constraints*)
+  (loop :for i :from 0 :below generations :do
+       (compute-fitness)
+       (let ((children nil)
+	     (parents nil))
+	 (setf parent-vector (choose-parents
+       (check-for-completion)))
+  
+       (let ((children nil)
