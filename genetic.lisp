@@ -18,4 +18,11 @@
 
 (defun compute-fitness()
   (loop :for i :from 0 :below (array-dimension *population* 0) :do
-       (setf (aref *population* i 1) (exec-func (aref *population* i 0) 2 2 2 2))))
+       (compile-func (aref *population* i 0))
+       (setf (aref *population* i 1)
+	     (/ (reduce #'+ (mapcar (lambda (args)
+				      (if (eql
+					   (exec-func (subseq args 0 4)) (nth 4 args))
+					  1 0))
+				    *constraints*))
+		(length *constraints*)))))
