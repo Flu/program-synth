@@ -59,4 +59,3 @@
 	 (setf parent-vector (choose-parents
        (check-for-completion)))
   
-       (let ((children nil)
