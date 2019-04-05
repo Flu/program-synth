@@ -1,6 +1,7 @@
 (in-package :fluturel.program-synth)
 
 (defparameter *mutation-chance* 0.2)
+
 (defparameter *population* nil)
 
 (defun mutate(individual)
