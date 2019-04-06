@@ -56,6 +56,7 @@
        (compute-fitness)
        (let ((children nil)
 	     (parents nil))
-	 (setf parent-vector (choose-parents
+	 (setf parents (choose-parents (floor (/ population-size 10))))
+	 (setf children (mapcar #'crossover parents (reverse parents))))
        (check-for-completion)))
   
