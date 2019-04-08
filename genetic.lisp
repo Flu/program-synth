@@ -4,8 +4,22 @@
 
 (defparameter *population* nil)
 
+(defclass func-object()
+  ((func-tree :initform nil :initarg :func-tree :accessor func-tree)
+   (fitness-score :initform 0 :accessor fitness)))
+
+(defmethod update-fitness((p func-object))
+  (with-accessors ((fitness fitness) (func-tree func-tree)) p
+    (compile-func func-tree)
+    (setf fitness
+	  (/ (reduce #'+ (mapcar (lambda (args)
+				   (if (eql
+					(exec-func (subseq args 0 4)) (nth 4 args))
+				       1 0))
+				 *constraints*))
+	     (length *constraints*)))))
+
 (defun mutate(individual)
-  (permutation individual)
   (replace-random-subtree individual (generate-random-tree 3)))
 
 (defun crossover(p1 p2)
