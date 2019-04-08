@@ -39,7 +39,7 @@
     (labels ((tournament (n)
 	       (let ((max-fitness 0)
 		     (result nil))
-		 (dotimes (a 9)
+		 (dotimes (a (- n 1))
 		   (let ((rand (random (array-dimension *population* 0))))
 		     (when (<= max-fitness (aref *population* rand 1))
 		       (setf result (aref *population* rand 0)))))
