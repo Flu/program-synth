@@ -55,9 +55,9 @@
 		 (dotimes (a (- n 1))
 		   (let* ((rand (random (length *population*)))
 			  (p (aref *population* rand)))
-		     (with-accessors ((fitness fitness) (func-tree func-tree)) p
+		     (with-accessors ((fitness fitness)) p
 		       (when (<= max-fitness fitness)
-			 (setf result func-tree)))))
+			 (setf result p)))))
 		 result)))
       (dotimes (a number)
 	(setf parents (cons (tournament 10) parents))))
