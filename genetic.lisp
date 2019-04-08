@@ -19,6 +19,11 @@
 				 *constraints*))
 	     (length *constraints*)))))
 
+(defmethod <fitness((p func-object) (q func-object))
+  (with-accessors ((fitness-p fitness)) p
+    (with-accessors ((fitness-q fitness)) q
+      (< fitness-p fitness-q))))
+
 (defun mutate(individual)
   (replace-random-subtree individual (generate-random-tree 3)))
 
