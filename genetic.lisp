@@ -47,11 +47,12 @@
        (update-fitness (aref *population* i))))
 
 (defun check-for-completion()
-  (let ((result nil))
+  (let ((results nil))
    (loop :for i :from 0 :below (length *population*) :do
-	(if (= 1 (aref *population* i))
-	    (setf result (cons (aref *population* i) result))))
-   result))
+	(if (= 1 (fitness (aref *population* i)))
+	    (setf results (cons (aref *population* i) results))))
+   (dolist (res results)
+     (format t "~a~%" (slot-value res 'func-tree)))))
 
 (defun choose-parents(number)
   (let ((parents nil))
