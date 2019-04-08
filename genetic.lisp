@@ -37,9 +37,9 @@
 
 (defun check-for-completion()
   (let ((result nil))
-   (loop :for i :from 0 :below (array-dimension *population* 0) :do
-	(if (= 1 (aref *population* i 1))
-	    (setf result (cons (aref *population* i 0) result))))
+   (loop :for i :from 0 :below (length *population*) :do
+	(if (= 1 (aref *population* i))
+	    (setf result (cons (aref *population* i) result))))
    result))
 
 (defun choose-parents(number)
