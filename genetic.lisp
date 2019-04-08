@@ -42,7 +42,7 @@
        (setf
 	(aref *population* i) (make-instance 'func-object :func-tree (generate-random-tree 5)))))
 
-(defun compute-fitness()
+(defun compute-fitness-population()
   (loop :for i :from 0 :below (length *population*) :do
        (update-fitness (aref *population* i))))
 
@@ -74,7 +74,7 @@
   (format t ">> Started evolving. Constraints:~%")
   (format t "~{~a~%~}----------~%" *constraints*)
   (loop :for i :from 0 :below generations :do
-       (compute-fitness)
+       (compute-fitness-population)
        (let ((children nil)
 	     (parents nil))
 	 (setf parents (choose-parents (floor (/ population-size 10))))
