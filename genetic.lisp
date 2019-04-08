@@ -26,20 +26,14 @@
   (replace-random-subtree p1 (random-subtree p2)))
 
 (defun init-population(population-size)
-  (setf *population* (make-array `(,population-size 2) :adjustable t))
+  (setf *population* (make-array population-size :adjustable t))
   (loop :for i :from 0 :below population-size :do
-       (setf (aref *population* i 0) (generate-random-tree 5))))
+       (setf
+	(aref *population* i) (make-instance 'func-object :func-tree (generate-random-tree 5)))))
 
 (defun compute-fitness()
-  (loop :for i :from 0 :below (array-dimension *population* 0) :do
-       (compile-func (aref *population* i 0))
-       (setf (aref *population* i 1)
-	     (/ (reduce #'+ (mapcar (lambda (args)
-				      (if (eql
-					   (exec-func (subseq args 0 4)) (nth 4 args))
-					  1 0))
-				    *constraints*))
-		(length *constraints*)))))
+  (loop :for i :from 0 :below (length *population*) :do
+       (update-fitness (aref *population* i))))
 
 (defun check-for-completion()
   (let ((result nil))
