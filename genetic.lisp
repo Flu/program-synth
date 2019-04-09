@@ -47,8 +47,14 @@
 	*population*)))
 
 (defun compute-fitness-population()
-  (loop :for i :from 0 :below (length *population*) :do
-       (update-fitness (aref *population* i))))
+  (dotimes (a 8)
+    (let* ((thr a)
+	   (start (floor (* (length *population*) 1/8 thr)))
+	   (end (floor (* (length *population*) 1/8 (+ thr 1)))))
+      (bt:make-thread
+       (lambda ()
+	 (loop :for i :from start :below end :do
+	      (update-fitness (aref *population* i))))))))
 
 (defun check-for-completion()
   (let ((results nil))
