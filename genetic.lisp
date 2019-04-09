@@ -95,7 +95,7 @@
 	     (setf parents (choose-parents (floor (/ population-size 10))))
 	     (setf children (mapcar #'crossover parents (reverse parents)))
 	     (loop :for j :from 0 :below (length children) :do
-		  (vector-push (elt children j) *population*)))
+		  (vector-push-extend (elt children j) *population*)))
 	   (map 'list #'mutate *population*)
 	   (sort *population* #'<fitness)
 	   (setf (fill-pointer *population*) population-size)
