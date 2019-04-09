@@ -1,10 +1,11 @@
 (in-package :fluturel.program-synth)
 
 (defparameter *population* nil)
+(defvar *global-lock* (bt:make-lock))
 
 (defclass func-object()
   ((func-tree :initform nil :initarg :func-tree :accessor func-tree)
-   (fitness-score :initform 0 :accessor fitness)))
+   (fitness-score :initform -1 :accessor fitness)))
 
 (defmethod update-fitness((p func-object))
   (with-accessors ((fitness fitness) (func-tree func-tree)) p
