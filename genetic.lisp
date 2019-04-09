@@ -22,7 +22,7 @@
 (defmethod <fitness((p func-object) (q func-object))
   (with-accessors ((fitness-p fitness)) p
     (with-accessors ((fitness-q fitness)) q
-      (< fitness-p fitness-q))))
+      (< fitness-q fitness-p))))
 
 (defmethod mutate((individual func-object))
   (let ((result nil))
