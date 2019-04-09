@@ -83,21 +83,21 @@
 (defun evolve(generations population-size)
   (time
    (locally
-      (declare (SB-EXT:muffle-conditions sb-kernel:redefinition-warning))
-    (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
-      (init-population population-size)
-      (format t ">> Started evolving. Constraints:~%")
-      (format t "~{~a~%~}----------~%" *constraints*)
-      (loop :for i :from 0 :below generations :do
-	   (compute-fitness-population)
-	   (let ((children nil)
-		 (parents nil))
-	     (setf parents (choose-parents (floor (/ population-size 10))))
-	     (setf children (mapcar #'crossover parents (reverse parents)))
-	     (loop :for j :from 0 :below (length children) :do
-		  (vector-push-extend (elt children j) *population*)))
-	   (map 'list #'mutate *population*)
-	   (sort *population* #'<fitness)
-	   (setf (fill-pointer *population*) population-size)
-	   (check-for-completion))))))
+       (declare (sb-ext:muffle-conditions sb-kernel:redefinition-warning))
+     (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
+       (init-population population-size)
+       (format t ">> Started evolving. Constraints:~%")
+       (format t "~{~a~%~}----------~%" *constraints*)
+       (loop :for i :from 0 :below generations :do
+	    (compute-fitness-population)
+	    (let ((children nil)
+		  (parents nil))
+	      (setf parents (choose-parents (floor (/ population-size 10))))
+	      (setf children (mapcar #'crossover parents (reverse parents)))
+	      (loop :for j :from 0 :below (length children) :do
+		   (vector-push-extend (elt children j) *population*)))
+	    (map 'list #'mutate *population*)
+	    (sort *population* #'<fitness)
+	    (setf (fill-pointer *population*) population-size)
+	    (check-for-completion))))))
   
