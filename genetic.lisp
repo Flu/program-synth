@@ -41,9 +41,9 @@
     result))
 
 (defun init-population(population-size)
-  (setf *population* (make-array (* population-size 2) :adjustable t :fill-pointer 0))
+  (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
   (loop :for i :from 0 :below population-size :do
-       (vector-push
+       (vector-push-extend
 	(make-instance 'func-object :func-tree (generate-random-tree 5))
 	*population*)))
 
