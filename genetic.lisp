@@ -22,25 +22,30 @@
 (defmethod <fitness((p func-object) (q func-object))
   (with-accessors ((fitness-p fitness)) p
     (with-accessors ((fitness-q fitness)) q
-      (< fitness-p fitness-q))))
+      (< fitness-q fitness-p))))
 
 (defmethod mutate((individual func-object))
-  (with-accessors ((func-tree func-tree)) individual
-    (replace-random-subtree func-tree (generate-random-tree 3)))
-  (update-fitness individual))
+  (let ((result nil))
+    (with-accessors ((func-tree func-tree)) individual
+      (setf result (replace-random-subtree func-tree (generate-random-tree 3))))
+    (update-fitness individual)
+    result))
 
 (defmethod crossover((p func-object) (q func-object))
-  (with-accessors ((p-tree func-tree)) p
-    (with-accessors ((q-tree func-tree)) q
-      (replace-random-subtree p (random-subtree q))))
-  (update-fitness p)
-  (update-fitness q))
+  (let ((result nil))
+    (with-accessors ((p-tree func-tree)) p
+      (with-accessors ((q-tree func-tree)) q
+	(setf result (replace-random-subtree p (random-subtree q)))))
+    (update-fitness p)
+    (update-fitness q)
+    result))
 
 (defun init-population(population-size)
-  (setf *population* (make-array population-size :adjustable t))
+  (setf *population* (make-array (* population-size 2) :adjustable t :fill-pointer 0))
   (loop :for i :from 0 :below population-size :do
-       (setf
-	(aref *population* i) (make-instance 'func-object :func-tree (generate-random-tree 5)))))
+       (vector-push
+	(make-instance 'func-object :func-tree (generate-random-tree 5))
+	*population*)))
 
 (defun compute-fitness-population()
   (loop :for i :from 0 :below (length *population*) :do
@@ -79,6 +84,11 @@
        (let ((children nil)
 	     (parents nil))
 	 (setf parents (choose-parents (floor (/ population-size 10))))
-	 (setf children (mapcar #'crossover parents (reverse parents))))
+	 (setf children (mapcar #'crossover parents (reverse parents)))
+	 (loop :for j :from 0 :below (length children) :do
+	      (vector-push (elt children j) *population*)))
+       (map 'list #'mutate *population*)
+       (sort *population* #'<fitness)
+       (setf (fill-pointer *population*) population-size)
        (check-for-completion)))
   
