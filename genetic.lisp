@@ -82,7 +82,7 @@
        (compute-fitness-population)
        (let ((children nil)
 	     (parents nil))
-	 (setf parents (choose-parents (floor (/ population-size 10))))
+	 (setf parents (choose-parents (floor (/ population-size 100))))
 	 (setf children (mapcar #'crossover parents (reverse parents))))
        (check-for-completion)))
   
