@@ -41,10 +41,11 @@
     result))
 
 (defun init-population(population-size)
-  (setf *population* (make-array population-size :adjustable t))
+  (setf *population* (make-array (* population-size 2) :adjustable t :fill-pointer 0))
   (loop :for i :from 0 :below population-size :do
-       (setf
-	(aref *population* i) (make-instance 'func-object :func-tree (generate-random-tree 5)))))
+       (vector-push
+	(make-instance 'func-object :func-tree (generate-random-tree 5))
+	*population*)))
 
 (defun compute-fitness-population()
   (loop :for i :from 0 :below (length *population*) :do
