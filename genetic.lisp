@@ -53,8 +53,11 @@
 	   (end (floor (* (length *population*) 1/8 (+ thr 1)))))
       (bt:make-thread
        (lambda ()
-	 (loop :for i :from start :below end :do
-	      (update-fitness (aref *population* i))))))))
+	 (locally
+	     (declare (sb-ext:muffle-conditions sb-kernel:redefinition-warning))
+	   (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
+	     (loop :for i :from start :below end :do
+		  (update-fitness (aref *population* i))))))))))
 
 (defun check-for-completion()
   (let ((results nil))
