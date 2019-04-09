@@ -1,10 +1,13 @@
 (in-package :fluturel.program-synth)
 
+(defparameter *constraints*
+  '((2 2 3 6 36) (2 1 5 6 33) (1 15 3 6 135) (1 1 2 2 8)
+    (5 6 7 8 165) (4 -1 2 3 15) (1 2 3 5 24) (-2 -14 5 8 -208)))
+
 (defun compile-func(func-tree)
   (eval `(defun func(_1 _2 _3 _4) ,func-tree)))
 
-(defun exec-func(func-tree &rest args)
-  (compile-func func-tree)
+(defun exec-func(args)
   (apply #'func args))
 
 (defun range(start end &optional (inc 1))
