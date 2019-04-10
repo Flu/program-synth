@@ -25,12 +25,14 @@
 
 (defmethod mutate((individual func-object))
   (with-accessors ((func-tree func-tree)) individual
-    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 3)))))
+    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 3)))
+    individual))
 
 (defmethod crossover((p func-object) (q func-object))
   (with-accessors ((p-tree func-tree)) p
     (with-accessors ((q-tree func-tree)) q
-      (replace-random-subtree p (random-subtree q)))))
+      (make-instance 'func-object
+		     :func-tree (replace-random-subtree p (random-subtree q))))))
 
 (defun init-population(population-size)
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
