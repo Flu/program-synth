@@ -8,6 +8,14 @@
 (defun compile-func(func-tree)
   (eval `(defun func(_1 _2 _3 _4) ,func-tree)))
 
+(defun exec-func%(func-tree args)
+  (let ((temp-tree (copy-tree func-tree)))
+    (nsubst (elt args 0) '_1 temp-tree)
+    (nsubst (elt args 1) '_2 temp-tree)
+    (nsubst (elt args 2) '_3 temp-tree)
+    (nsubst (elt args 3) '_4 temp-tree)
+    (eval temp-tree)))
+    
 (defun exec-func(args)
   (apply #'func args))
 
