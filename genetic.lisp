@@ -25,7 +25,7 @@
 
 (defmethod mutate((individual func-object))
   (with-accessors ((func-tree func-tree)) individual
-    (replace-random-subtree func-tree (generate-random-tree 3))))
+    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 3)))))
 
 (defmethod crossover((p func-object) (q func-object))
   (with-accessors ((p-tree func-tree)) p
