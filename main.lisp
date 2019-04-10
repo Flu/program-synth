@@ -18,6 +18,14 @@
       ((eql temp-tree '_4) (elt args 3))
       (t (eval temp-tree)))))
 
+(defun exec-func%(func-tree args)
+  (eval
+   `(let ((_1 ,(elt args 0))
+	  (_2 ,(elt args 1))
+	  (_3 ,(elt args 2))
+	  (_4 ,(elt args 3)))
+      ,func-tree)))
+
 (defun range(start end &optional (inc 1))
   (cond
     ((< end start) nil)
