@@ -95,6 +95,7 @@
 	      (loop :for j :from 0 :below (length children) :do
 		   (vector-push-extend (elt children j) *population*)))
 	    (map 'list #'mutate *population*)
+	    (compute-fitness-population)
 	    (sort *population* #'<fitness)
 	    (setf (fill-pointer *population*) population-size)
 	    (check-for-completion))))))
