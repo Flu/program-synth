@@ -25,7 +25,8 @@
 
 (defmethod mutate((individual func-object))
   (with-accessors ((func-tree func-tree)) individual
-    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 3)))
+    (if (< (random 100) 25)
+    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 2))))
     individual))
 
 (defmethod crossover((p func-object) (q func-object))
@@ -98,5 +99,7 @@
 	    (compute-fitness-population)
 	    (sort *population* #'<fitness)
 	    (setf (fill-pointer *population*) population-size)
+	    (format t "Generation ~a is done, maximum fitness was ~a~%"
+		    i (fitness (aref *population* 0)))
 	    (check-for-completion))))))
   
