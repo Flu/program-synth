@@ -1,12 +1,11 @@
 (in-package :fluturel.program-synth)
 
-(defparameter *mutation-chance* 0.2)
-
 (defparameter *population* nil)
+(defvar *global-lock* (bt:make-lock))
 
 (defclass func-object()
   ((func-tree :initform nil :initarg :func-tree :accessor func-tree)
-   (fitness-score :initform 0 :accessor fitness)))
+   (fitness-score :initform -1 :accessor fitness)))
 
 (defmethod update-fitness((p func-object))
   (with-accessors ((fitness fitness) (func-tree func-tree)) p
@@ -41,15 +40,24 @@
     result))
 
 (defun init-population(population-size)
-  (setf *population* (make-array (* population-size 2) :adjustable t :fill-pointer 0))
+  (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
   (loop :for i :from 0 :below population-size :do
-       (vector-push
+       (vector-push-extend
 	(make-instance 'func-object :func-tree (generate-random-tree 5))
 	*population*)))
 
 (defun compute-fitness-population()
-  (loop :for i :from 0 :below (length *population*) :do
-       (update-fitness (aref *population* i))))
+  (dotimes (a 8)
+    (let* ((thr a)
+	   (start (floor (* (length *population*) 1/8 thr)))
+	   (end (floor (* (length *population*) 1/8 (+ thr 1)))))
+      (bt:make-thread
+       (lambda ()
+	 (locally
+	     (declare (sb-ext:muffle-conditions sb-kernel:redefinition-warning))
+	   (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
+	     (loop :for i :from start :below end :do
+		  (update-fitness (aref *population* i))))))))))
 
 (defun check-for-completion()
   (let ((results nil))
@@ -62,7 +70,7 @@
 (defun choose-parents(number)
   (let ((parents nil))
     (labels ((tournament (n)
-	       (let ((max-fitness 0)
+	       (let ((max-fitness -2)
 		     (result nil))
 		 (dotimes (a (- n 1))
 		   (let* ((rand (random (length *population*)))
@@ -76,22 +84,23 @@
     parents))
 
 (defun evolve(generations population-size)
-  (locally
-      (declare (SB-EXT:muffle-conditions sb-kernel:redefinition-warning))
-    (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
-      (init-population population-size)
-      (format t ">> Started evolving. Constraints:~%")
-      (format t "~{~a~%~}----------~%" *constraints*)
-      (loop :for i :from 0 :below generations :do
-	   (compute-fitness-population)
-	   (let ((children nil)
-		 (parents nil))
-	     (setf parents (choose-parents (floor (/ population-size 10))))
-	     (setf children (mapcar #'crossover parents (reverse parents)))
-	     (loop :for j :from 0 :below (length children) :do
-		  (vector-push (elt children j) *population*)))
-	   (map 'list #'mutate *population*)
-	   (sort *population* #'<fitness)
-	   (setf (fill-pointer *population*) population-size)
-	   (check-for-completion)))))
+  (time
+   (locally
+       (declare (sb-ext:muffle-conditions sb-kernel:redefinition-warning))
+     (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
+       (init-population population-size)
+       (format t ">> Started evolving. Constraints:~%")
+       (format t "~{~a~%~}----------~%" *constraints*)
+       (loop :for i :from 0 :below generations :do
+	    (compute-fitness-population)
+	    (let ((children nil)
+		  (parents nil))
+	      (setf parents (choose-parents (floor (/ population-size 10))))
+	      (setf children (mapcar #'crossover parents (reverse parents)))
+	      (loop :for j :from 0 :below (length children) :do
+		   (vector-push-extend (elt children j) *population*)))
+	    (map 'list #'mutate *population*)
+	    (sort *population* #'<fitness)
+	    (setf (fill-pointer *population*) population-size)
+	    (check-for-completion))))))
   
