@@ -24,18 +24,13 @@
       (< fitness-q fitness-p))))
 
 (defmethod mutate((individual func-object))
-  (let ((result nil))
-    (with-accessors ((func-tree func-tree)) individual
-      (setf result (replace-random-subtree func-tree (generate-random-tree 3))))
-    (update-fitness individual)
-    result))
+  (with-accessors ((func-tree func-tree)) individual
+    (replace-random-subtree func-tree (generate-random-tree 3))))
 
 (defmethod crossover((p func-object) (q func-object))
-  (let ((result nil))
-    (with-accessors ((p-tree func-tree)) p
-      (with-accessors ((q-tree func-tree)) q
-	(setf result (replace-random-subtree p (random-subtree q)))))
-    result))
+  (with-accessors ((p-tree func-tree)) p
+    (with-accessors ((q-tree func-tree)) q
+      (replace-random-subtree p (random-subtree q)))))
 
 (defun init-population(population-size)
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
