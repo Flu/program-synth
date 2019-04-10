@@ -5,19 +5,18 @@
     (5 6 7 8 165) (4 -1 2 3 15) (1 2 3 5 24) (-2 -14 5 8 -208)
     (0 1 8 9 17) (-23 41 2 2 72) (56 -200 2 -47 6480)))
 
-(defun compile-func(func-tree)
-  (eval `(defun func(_1 _2 _3 _4) ,func-tree)))
-
-(defun exec-func%(func-tree args)
+(defun exec-func(func-tree args)
   (let ((temp-tree (copy-tree func-tree)))
     (nsubst (elt args 0) '_1 temp-tree)
     (nsubst (elt args 1) '_2 temp-tree)
     (nsubst (elt args 2) '_3 temp-tree)
     (nsubst (elt args 3) '_4 temp-tree)
-    (eval temp-tree)))
-    
-(defun exec-func(args)
-  (apply #'func args))
+    (cond
+      ((eql temp-tree '_1) (elt args 0))
+      ((eql temp-tree '_2) (elt args 1))
+      ((eql temp-tree '_3) (elt args 2))
+      ((eql temp-tree '_4) (elt args 3))
+      (t (eval temp-tree)))))
 
 (defun range(start end &optional (inc 1))
   (cond
