@@ -9,13 +9,13 @@
 
 (defmethod update-fitness((p func-object))
   (with-accessors ((fitness fitness) (func-tree func-tree)) p
-    (compile-func func-tree)
     (setf fitness
-	  (/ (reduce #'+ (mapcar (lambda (args)
-				   (if (eql
-					(exec-func (subseq args 0 4)) (nth 4 args))
-				       1 0))
-				 *constraints*))
+	  (/ (reduce #'+
+		     (mapcar (lambda (args)
+			       (if (eql
+				    (exec-func func-tree (subseq args 0 4)) (nth 4 args))
+				   1 0))
+			     *constraints*))
 	     (length *constraints*)))))
 
 (defmethod <fitness((p func-object) (q func-object))
@@ -24,20 +24,16 @@
       (< fitness-q fitness-p))))
 
 (defmethod mutate((individual func-object))
-  (let ((result nil))
-    (with-accessors ((func-tree func-tree)) individual
-      (setf result (replace-random-subtree func-tree (generate-random-tree 3))))
-    (update-fitness individual)
-    result))
+  (with-accessors ((func-tree func-tree)) individual
+    (if (< (random 100) 25)
+    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 2))))
+    individual))
 
 (defmethod crossover((p func-object) (q func-object))
-  (let ((result nil))
-    (with-accessors ((p-tree func-tree)) p
-      (with-accessors ((q-tree func-tree)) q
-	(setf result (replace-random-subtree p (random-subtree q)))))
-    (update-fitness p)
-    (update-fitness q)
-    result))
+  (with-accessors ((p-tree func-tree)) p
+    (with-accessors ((q-tree func-tree)) q
+      (make-instance 'func-object
+		     :func-tree (replace-random-subtree p (random-subtree q))))))
 
 (defun init-population(population-size)
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
@@ -100,7 +96,10 @@
 	      (loop :for j :from 0 :below (length children) :do
 		   (vector-push-extend (elt children j) *population*)))
 	    (map 'list #'mutate *population*)
+	    (compute-fitness-population)
 	    (sort *population* #'<fitness)
 	    (setf (fill-pointer *population*) population-size)
+	    (format t "Generation ~a is done, maximum fitness was ~a~%"
+		    i (fitness (aref *population* 0)))
 	    (check-for-completion))))))
   
