@@ -35,8 +35,6 @@
     (with-accessors ((p-tree func-tree)) p
       (with-accessors ((q-tree func-tree)) q
 	(setf result (replace-random-subtree p (random-subtree q)))))
-    (update-fitness p)
-    (update-fitness q)
     result))
 
 (defun init-population(population-size)
