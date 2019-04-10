@@ -9,12 +9,11 @@
 
 (defmethod update-fitness((p func-object))
   (with-accessors ((fitness fitness) (func-tree func-tree)) p
-    (compile-func func-tree)
     (setf fitness
 	  (/ (reduce #'+
 		     (mapcar (lambda (args)
 			       (if (eql
-				    (exec-func (subseq args 0 4)) (nth 4 args))
+				    (exec-func func-tree (subseq args 0 4)) (nth 4 args))
 				   1 0))
 			     *constraints*))
 	     (length *constraints*)))))
