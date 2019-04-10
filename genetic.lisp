@@ -70,7 +70,7 @@
 (defun choose-parents(number)
   (let ((parents nil))
     (labels ((tournament (n)
-	       (let ((max-fitness 0)
+	       (let ((max-fitness -2)
 		     (result nil))
 		 (dotimes (a (- n 1))
 		   (let* ((rand (random (length *population*)))
