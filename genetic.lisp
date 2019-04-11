@@ -12,9 +12,8 @@
     (setf fitness
 	  (/ (reduce #'+
 		     (mapcar (lambda (args)
-			       (if (eql
-				    (exec-func func-tree (subseq args 0 4)) (nth 4 args))
-				   1 0))
+			       (let ((result (exec-func func-tree (subseq args 0 4))))
+				 (abs (pd (- (nth 4 args) result) (nth 4 args)))))
 			     *constraints*))
 	     (length *constraints*)))))
 
