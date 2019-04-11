@@ -57,7 +57,7 @@
 (defun check-for-completion()
   (let ((results nil))
    (loop :for i :from 0 :below (length *population*) :do
-	(if (= 1 (fitness (aref *population* i)))
+	(if (= 0 (fitness (aref *population* i)))
 	    (setf results (cons (aref *population* i) results))))
    (dolist (res results)
      (format t "~a~%" (slot-value res 'func-tree)))))
