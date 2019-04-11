@@ -12,28 +12,27 @@
     (setf fitness
 	  (/ (reduce #'+
 		     (mapcar (lambda (args)
-			       (if (eql
-				    (exec-func func-tree (subseq args 0 4)) (nth 4 args))
-				   1 0))
+			       (let ((result (exec-func func-tree (subseq args 0 4))))
+				 (abs (pd (- (nth 4 args) result) (nth 4 args)))))
 			     *constraints*))
 	     (length *constraints*)))))
 
 (defmethod <fitness((p func-object) (q func-object))
   (with-accessors ((fitness-p fitness)) p
     (with-accessors ((fitness-q fitness)) q
-      (< fitness-q fitness-p))))
+      (> fitness-q fitness-p))))
 
 (defmethod mutate((individual func-object))
   (with-accessors ((func-tree func-tree)) individual
     (if (< (random 100) 25)
-    (setf func-tree (replace-random-subtree func-tree (generate-random-tree 2))))
+	(setf func-tree (replace-random-subtree func-tree (generate-random-tree 2))))
     individual))
 
 (defmethod crossover((p func-object) (q func-object))
   (with-accessors ((p-tree func-tree)) p
     (with-accessors ((q-tree func-tree)) q
       (make-instance 'func-object
-		     :func-tree (replace-random-subtree p (random-subtree q))))))
+		     :func-tree (replace-random-subtree p-tree (random-subtree q-tree))))))
 
 (defun init-population(population-size)
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
@@ -58,7 +57,7 @@
 (defun check-for-completion()
   (let ((results nil))
    (loop :for i :from 0 :below (length *population*) :do
-	(if (= 1 (fitness (aref *population* i)))
+	(if (= 0 (fitness (aref *population* i)))
 	    (setf results (cons (aref *population* i) results))))
    (dolist (res results)
      (format t "~a~%" (slot-value res 'func-tree)))))
@@ -99,7 +98,7 @@
 	    (compute-fitness-population)
 	    (sort *population* #'<fitness)
 	    (setf (fill-pointer *population*) population-size)
-	    (format t "Generation ~a is done, maximum fitness was ~a~%"
+	    (format t "Generation ~a is done, minimum fitness was ~a~%"
 		    i (fitness (aref *population* 0)))
 	    (check-for-completion))))))
   
