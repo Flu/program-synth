@@ -42,7 +42,7 @@
 	*population*)))
 
 (defun compute-fitness-population()
-  (dotimes (a 8)
+  (let ((threads (loop :for a :from 0 :below 8 :collect
     (let* ((thr a)
 	   (start (floor (* (length *population*) 1/8 thr)))
 	   (end (floor (* (length *population*) 1/8 (+ thr 1)))))
@@ -52,7 +52,9 @@
 	     (declare (sb-ext:muffle-conditions sb-kernel:redefinition-warning))
 	   (handler-bind ((sb-kernel:redefinition-warning #'muffle-warning))
 	     (loop :for i :from start :below end :do
-		  (update-fitness (aref *population* i))))))))))
+		  (update-fitness (aref *population* i)))))))))))
+    (dolist (thread threads)
+      (bt:join-thread thread))))
 
 (defun check-for-completion()
   (let ((results nil))
