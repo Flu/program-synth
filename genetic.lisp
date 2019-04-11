@@ -98,7 +98,7 @@
 	    (compute-fitness-population)
 	    (sort *population* #'<fitness)
 	    (setf (fill-pointer *population*) population-size)
-	    (format t "Generation ~a is done, maximum fitness was ~a~%"
+	    (format t "Generation ~a is done, minimum fitness was ~a~%"
 		    i (fitness (aref *population* 0)))
 	    (check-for-completion))))))
   
