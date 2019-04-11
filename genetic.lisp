@@ -32,7 +32,7 @@
   (with-accessors ((p-tree func-tree)) p
     (with-accessors ((q-tree func-tree)) q
       (make-instance 'func-object
-		     :func-tree (replace-random-subtree p (random-subtree q))))))
+		     :func-tree (replace-random-subtree p-tree (random-subtree q-tree))))))
 
 (defun init-population(population-size)
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
