@@ -1,3 +1,4 @@
+(ql:quickload :bt-semaphore)
 (load "~/Lisp/program-synth/packages.lisp")
 (load "~/Lisp/program-synth/main.lisp")
 (load "~/Lisp/program-synth/functree.lisp")
