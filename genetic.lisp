@@ -64,21 +64,16 @@
    (dolist (res results)
      (format t "~a~%" (slot-value res 'func-tree)))))
 
-(defun choose-parents(number)
-  (let ((parents nil))
-    (labels ((tournament (n)
-	       (let ((max-fitness -2)
-		     (result nil))
-		 (dotimes (a (- n 1))
-		   (let* ((rand (random (length *population*)))
-			  (p (aref *population* rand)))
-		     (with-accessors ((fitness fitness)) p
-		       (when (<= max-fitness fitness)
-			 (setf result p)))))
-		 result)))
-      (dotimes (a number)
-	(setf parents (cons (tournament 10) parents))))
-    parents))
+(defun choose-parents(number &optional (tournament-size 10))
+  (labels ((choose-indexes(number &optional (acc nil))
+	     (if (= number 0)
+		 acc
+		 (choose-indexes
+		  (- number 1)
+		  (cons (random (length *population*)) acc)))))
+    (loop :for i :from 0 :below number :collect
+	 (aref *population*
+	       (reduce #'min (choose-indexes tournament-size))))))
 
 (defun evolve(generations population-size)
   (time
@@ -92,7 +87,7 @@
        (loop :for i :from 0 :below generations :do
 	    (let ((children nil)
 		  (parents nil))
-	      (setf parents (choose-parents (floor (/ population-size 10))))
+	      (setf parents (choose-parents (floor (/ population-size 10)) 20))
 	      (setf children (mapcar #'crossover parents (reverse parents)))
 	      (loop :for j :from 0 :below (length children) :do
 		   (vector-push-extend (elt children j) *population*)))
