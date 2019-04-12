@@ -1,6 +1,7 @@
 (in-package :fluturel.program-synth)
 
 (defparameter *population* nil)
+(defparameter *mutation-chance* 0.05)
 (defvar *global-lock* (bt:make-lock))
 
 (defclass func-object()
@@ -24,7 +25,7 @@
 
 (defmethod mutate((individual func-object))
   (with-accessors ((func-tree func-tree)) individual
-    (if (< (random 100) 25)
+    (if (< (/ (random 100) 100) *mutation-chance*)
 	(setf func-tree (replace-random-subtree func-tree (generate-random-tree 2))))
     individual))
 

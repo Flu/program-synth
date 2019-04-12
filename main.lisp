@@ -5,6 +5,10 @@
     (5 6 7 8 165) (4 -1 2 3 15) (1 2 3 5 24) (-2 -14 5 8 -208)
     (0 1 8 9 17) (-23 41 2 2 72) (56 -200 2 -47 6480)))
 
+(defparameter *constraints*
+  '((1 2 3 3 -6.3110323) (0 0 1 5 -0.0) (5 0 1 5 5.2740836)
+    (2 5 6 6 -8.638326) (-2 55 -51 6 12.275515)))
+
 (defun exec-func(func-tree args)
   (let ((temp-tree (copy-tree func-tree)))
     (nsubst (elt args 0) '_1 temp-tree)
