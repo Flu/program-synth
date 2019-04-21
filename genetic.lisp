@@ -39,7 +39,7 @@
   (setf *population* (make-array population-size :adjustable t :fill-pointer 0))
   (loop :for i :from 0 :below population-size :do
        (vector-push-extend
-	(make-instance 'func-object :func-tree (generate-random-tree 5))
+	(make-instance 'func-object :func-tree (generate-random-tree 2))
 	*population*)))
 
 (defun compute-fitness-population()
